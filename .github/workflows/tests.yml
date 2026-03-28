@@ -29,6 +29,9 @@ jobs:
     - name: Install Chrome
       uses: browser-actions/setup-chrome@v1
 
+    - name: Clone Django project
+      run: git clone https://github.com/Lekkioui/airline-django.git
+
     - name: Run Django migrations
       run: |
         cd airline-django
