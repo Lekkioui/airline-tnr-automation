@@ -31,10 +31,14 @@ jobs:
 
     - name: Run Django migrations
       run: |
+        cd airline-django
         python manage.py migrate
 
-    - name: Run tests
+    - name: Run application and tests
       run: |
+        cd airline-django
+        python manage.py migrate
         python manage.py runserver &
         sleep 5
+        cd ..
         robot tests/
