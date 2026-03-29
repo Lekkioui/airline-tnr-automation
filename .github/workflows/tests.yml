@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout automation code
       uses: actions/checkout@v3
 
     - name: Set up Python
@@ -22,37 +22,43 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
-    - name: Install Chrome
+    - name: Install Chrome & Driver
       uses: browser-actions/setup-chrome@v1
+    - uses: nanasess/setup-chromedriver@v2
 
-    - name: Install ChromeDriver
-      uses: nanasess/setup-chromedriver@v2
-
-    - name: Clone Django project
-      # On ajoute "../airline-django" à la fin pour placer le dossier au bon endroit
+    - name: Clone Django project (Parent Directory)
+      # On clone à côté du projet d'automation pour garder le chemin ../airline-django valide
       run: git clone https://github.com/Lekkioui/airline-django.git ../airline-django
 
-    - name: Setup DB + Data + Run Tests
+    - name: Setup Django & Run Server
       run: |
-        cd airline-django
-
-        # Reset DB
+        # On se déplace dans le dossier parent pour configurer Django
+        cd ../airline-django
+        
+        python -m pip install django  # Sécurité : s'assurer que django est là
         rm -f db.sqlite3
-
-        # Migrate
         python manage.py migrate
-
-        # Load test data (IMPORTANT)
         python manage.py loaddata flights/fixtures/test_data.json
-
-        python manage.py shell -c "
-        from django.contrib.auth.models import User;
-        User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse') if not User.objects.filter(username='anasse').exists() else None
-        "
-
-        # Run server
+        
+        # Création du superuser
+        python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse') if not User.objects.filter(username='anasse').exists() else None"
+        
+        # Lancer le serveur en arrière-plan
         python manage.py runserver &
         sleep 5
 
-        cd ..
+    - name: Run Robot Framework Tests
+      run: |
+        # Ici nous sommes dans le dossier d'automation (racine du checkout)
+        # Le mot-clé "Reset Test Data" trouvera bien "../airline-django"
         robot --variable BROWSER:headlesschrome tests/
+
+    - name: Upload Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: robot-results
+        path: |
+          report.html
+          log.html
+          output.xml
