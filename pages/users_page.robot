@@ -4,7 +4,7 @@ Library    SeleniumLibrary
 *** Variables ***
 ${USERS_URL}    http://127.0.0.1:8000/users/
 ${ADMIN_USER}   anasse
-${ADMIN_PASS}   anasse
+${ADMIN_PASS}   anasse123
 
 *** Keywords ***
 Open Users Page

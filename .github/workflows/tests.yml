@@ -34,16 +34,24 @@ jobs:
     - name: Setup DB + Data + Run Tests
       run: |
         cd airline-django
+
+        # Reset DB
         rm -f db.sqlite3
+
+        # Migrate
         python manage.py migrate
+
+        # Load test data (IMPORTANT)
+        python manage.py loaddata flights/fixtures/test_data.json
 
         python manage.py shell -c "
         from django.contrib.auth.models import User;
         User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse123') if not User.objects.filter(username='anasse').exists() else None
         "
 
+        # Run server
         python manage.py runserver &
         sleep 5
-        cd ..
 
+        cd ..
         robot --variable BROWSER:headlesschrome tests/
