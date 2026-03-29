@@ -29,22 +29,23 @@ jobs:
     - name: Clone Django project
       run: git clone https://github.com/Lekkioui/airline-django.git
 
-    - name: Setup DB + Run App + Execute Tests
+    - name: Setup DB + Data + Run Tests
       run: |
         cd airline-django
 
-        # Reset DB propre
+        # Reset DB
         rm -f db.sqlite3
         python manage.py migrate
 
-        # Lancer serveur en arrière-plan
-        python manage.py runserver &
+        # Create admin user
+        python manage.py shell -c "
+        from django.contrib.auth.models import User;
+        User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse123') if not User.objects.filter(username='admin').exists() else None
+        "
 
-        # Attendre que le serveur démarre
+        # Run server
+        python manage.py runserver &
         sleep 5
 
-        # Revenir au repo principal
         cd ..
-
-        # Lancer les tests
         robot tests/
