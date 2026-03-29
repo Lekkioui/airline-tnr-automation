@@ -40,7 +40,7 @@ jobs:
         # Create admin user
         python manage.py shell -c "
         from django.contrib.auth.models import User;
-        User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse123') if not User.objects.filter(username='admin').exists() else None
+        User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse123') if not User.objects.filter(username='anasse').exists() else None
         "
 
         # Run server
