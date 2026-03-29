@@ -32,18 +32,10 @@ jobs:
 
     - name: Setup Django & Run Server
       run: |
-        # On se déplace dans le dossier parent pour configurer Django
         cd ../airline-django
-        
-        python -m pip install django  # Sécurité : s'assurer que django est là
-        rm -f db.sqlite3
+        python -m pip install django
         python manage.py migrate
-        python manage.py loaddata flights/fixtures/test_data.json
-        
-        # Création du superuser
-        python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('anasse', 'anasse@gmail.com', 'anasse') if not User.objects.filter(username='anasse').exists() else None"
-        
-        # Lancer le serveur en arrière-plan
+        python manage.py setup_test_data  # Initialisation pro
         python manage.py runserver &
         sleep 5
 
