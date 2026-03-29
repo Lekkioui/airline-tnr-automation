@@ -11,5 +11,5 @@ Check Flights Page
 Open Flight Details Test
     Open Flights Page
     Open First Flight Details
-    Verify Flight Details Page
+    Verify Flight Details From List
     Close Browser Session

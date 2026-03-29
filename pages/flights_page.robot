@@ -25,7 +25,7 @@ Verify Flights Data
 Open First Flight Details
     Click Link    xpath=//a[contains(@href,'/flights/')]
 
-Verify Flight Details Page
+Verify Flight Details From List
     Wait Until Page Contains    Origin    timeout=10s
     Page Should Contain    Destination
 
