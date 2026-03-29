@@ -29,5 +29,19 @@ Verify Flight Details From List
     Wait Until Page Contains    Origin    timeout=10s
     Page Should Contain    Destination
 
+Get Passenger Count
+    ${count}=    Get Element Count    xpath://select[@name='passenger']/option
+    [Return]    ${count}
+
+Select First Passenger
+    Select From List By Index    name:passenger    0
+
+Add Passenger
+    Wait Until Element Is Visible    name:passenger
+    ${count}=    Get Passenger Count
+    Should Be True    ${count} > 0
+    Select First Passenger
+    Click Button    xpath://input[@type='submit']
+
 Close Browser Session
     Close Browser

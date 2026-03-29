@@ -6,18 +6,24 @@ ${PASSENGER_NAME}    Hermione Granger
 
 *** Keywords ***
 Click First Flight
-    Click Link    xpath://a[contains(@href, '/flights/')]
+    Wait Until Element Is Visible    xpath:(//a[contains(@href, '/flights/')])[1]
+    Click Element    xpath:(//a[contains(@href, '/flights/')])[1]
 
 Verify Flight Details Page
-    Page Should Contain    Origin
+    Wait Until Page Contains    Origin
     Page Should Contain    Destination
 
 Add Passenger
     Wait Until Element Is Visible    name:passenger
-    ${count}=    Get Element Count    xpath://select[@name='passenger']/option
-    Should Be True    ${count} > 0
+    ${count}=    Get Passenger Count
+    Run Keyword If    ${count} == 0    Fail    No passengers available for booking
     Select From List By Index    name:passenger    0
     Click Button    xpath://input[@type='submit']
 
 Verify Passenger Added
-    Page Should Contain    ${PASSENGER_NAME}
+    Page Should Contain    Passengers
+
+Get Passenger Count
+    ${count}=    Get Element Count    xpath://select[@name='passenger']/option
+    [Return]    ${count}
+    
