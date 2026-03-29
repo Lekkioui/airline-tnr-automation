@@ -7,3 +7,9 @@ Admin Login Test
     Login As Admin
     Verify Login Success
     Close Users Session
+
+Invalid Login Test
+    Open Users Page
+    Login With Credentials    fakeuser    wrongpass
+    Verify Login Failed
+    Close Users Session

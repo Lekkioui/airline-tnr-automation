@@ -4,7 +4,7 @@ Library    SeleniumLibrary
 *** Variables ***
 ${USERS_URL}    http://127.0.0.1:8000/users/
 ${ADMIN_USER}   anasse
-${ADMIN_PASS}   anasse123
+${ADMIN_PASS}   anasse
 
 *** Keywords ***
 Open Users Page
@@ -20,10 +20,19 @@ Open Users Page
 Login As Admin
     Input Text    name:username    ${ADMIN_USER}
     Input Text    name:password    ${ADMIN_PASS}
-    Click Button  xpath:/html/body/form/input[4]
+    Click Button    xpath=//input[@type='submit']
 
 Verify Login Success
     Wait Until Page Contains    Welcome    timeout=10s
+
+Login With Credentials
+    [Arguments]    ${username}    ${password}
+    Input Text    name:username    ${username}
+    Input Text    name:password    ${password}
+    Click Button    xpath=//input[@type='submit']
+
+Verify Login Failed
+    Wait Until Page Contains    Invalid    timeout=5s
 
 Close Users Session
     Close Browser
