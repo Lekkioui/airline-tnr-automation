@@ -22,5 +22,12 @@ Verify Flights Data
     Page Should Contain    New York City
     Page Should Contain    London
 
+Open First Flight Details
+    Click Link    xpath=//a[contains(@href,'/flights/')]
+
+Verify Flight Details Page
+    Wait Until Page Contains    Origin    timeout=10s
+    Page Should Contain    Destination
+
 Close Browser Session
     Close Browser
