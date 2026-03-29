@@ -36,11 +36,15 @@ No Passenger Available
     FOR    ${i}    IN RANGE    10
         Run Keyword And Ignore Error    flight_details_page.Add Passenger
     END
-    ${count}=    flight_details_page.Get Passenger Count
-    Should Be Equal As Integers    ${count}    0
+    Wait Until Keyword Succeeds    5s    500ms    Verify List Is Empty
     Close Browser Session
 
 Invalid Flight Page
     Open Browser    http://127.0.0.1:8000/flights/999    chrome
     Wait Until Page Contains    DoesNotExist    timeout=5s
     Close Browser
+
+*** Keywords ***
+Verify List Is Empty
+    ${count}=    flight_details_page.Get Passenger Count
+    Should Be Equal As Integers    ${count}    0

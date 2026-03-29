@@ -1,5 +1,7 @@
 *** Settings ***
 Resource    ../pages/users_page.robot
+Resource    ../resources/common.robot
+Test Setup   Reset Test Data
 
 *** Test Cases ***
 Admin Login Test

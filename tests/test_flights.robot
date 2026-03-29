@@ -1,5 +1,7 @@
 *** Settings ***
 Resource    ../pages/flights_page.robot
+Resource    ../resources/common.robot
+Test Setup    Reset Test Data
 
 *** Test Cases ***
 Check Flights Page

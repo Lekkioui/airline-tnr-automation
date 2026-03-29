@@ -19,6 +19,7 @@ Add Passenger
     Run Keyword If    ${count} == 0    Fail    No passengers available for booking
     Select From List By Index    name:passenger    0
     Click Button    xpath://input[@type='submit']
+    Wait Until Page Contains    Passengers    timeout=5s
 
 Verify Passenger Added
     Page Should Contain    Passengers
