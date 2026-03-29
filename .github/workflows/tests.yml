@@ -22,9 +22,6 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        pip install robotframework
-        pip install robotframework-seleniumlibrary
-        pip install webdriver-manager
 
     - name: Install Chrome
       uses: browser-actions/setup-chrome@v1
@@ -32,16 +29,22 @@ jobs:
     - name: Clone Django project
       run: git clone https://github.com/Lekkioui/airline-django.git
 
-    - name: Run Django migrations
+    - name: Setup DB + Run App + Execute Tests
       run: |
         cd airline-django
+
+        # Reset DB propre
+        rm -f db.sqlite3
         python manage.py migrate
 
-    - name: Run application and tests
-      run: |
-        cd airline-django
-        python manage.py migrate
+        # Lancer serveur en arrière-plan
         python manage.py runserver &
+
+        # Attendre que le serveur démarre
         sleep 5
+
+        # Revenir au repo principal
         cd ..
+
+        # Lancer les tests
         robot tests/
