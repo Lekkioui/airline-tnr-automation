@@ -29,7 +29,8 @@ jobs:
       uses: nanasess/setup-chromedriver@v2
 
     - name: Clone Django project
-      run: git clone https://github.com/Lekkioui/airline-django.git
+      # On ajoute "../airline-django" à la fin pour placer le dossier au bon endroit
+      run: git clone https://github.com/Lekkioui/airline-django.git ../airline-django
 
     - name: Setup DB + Data + Run Tests
       run: |
