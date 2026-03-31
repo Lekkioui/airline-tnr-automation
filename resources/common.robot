@@ -4,9 +4,22 @@ Library     OperatingSystem
 
 *** Keywords ***
 Reset Test Data
-    ${win_python}=    Set Variable    ../airline-django/venv/Scripts/python.exe
-    ${is_win}=        Run Keyword And Return Status    File Should Exist    ${win_python}
-    ${cmd}=           Set Variable If    ${is_win}    ${win_python}    python
+    ${is_windows}=    Evaluate    os.name == 'nt'    modules=os
 
-    # Exécution de la commande personnalisée
-    Run Process    ${cmd}    manage.py    setup_test_data    cwd=../airline-django
+    IF    ${is_windows}
+        ${python}=    Set Variable    ../airline-django/venv/Scripts/python.exe
+    ELSE
+        ${python}=    Set Variable    python
+    END
+
+    ${result}=    Run Process
+    ...    ${python}    manage.py    setup_test_data
+    ...    cwd=../airline-django
+    ...    stdout=PIPE
+    ...    stderr=PIPE
+
+    Log    STDOUT: ${result.stdout}
+    Log    STDERR: ${result.stderr}
+
+    Should Be Equal As Integers    ${result.rc}    0
+    ...    msg=setup_test_data a échoué:\n${result.stderr}

@@ -24,26 +24,31 @@ jobs:
 
     - name: Install Chrome & Driver
       uses: browser-actions/setup-chrome@v1
-    - uses: nanasess/setup-chromedriver@v2
 
-    - name: Clone Django project (Parent Directory)
-      # On clone à côté du projet d'automation pour garder le chemin ../airline-django valide
+    - name: Install ChromeDriver
+      uses: nanasess/setup-chromedriver@v2
+
+    - name: Clone Django project
       run: git clone https://github.com/Lekkioui/airline-django.git ../airline-django
 
-    - name: Setup Django & Run Server
+    - name: Setup Django virtualenv & dependencies
       run: |
         cd ../airline-django
-        python -m pip install django
+        python -m venv venv
+        source venv/bin/activate
+        pip install django
         python manage.py migrate
-        python manage.py setup_test_data  # Initialisation pro
+        python manage.py setup_test_data
+
+    - name: Run Django server
+      run: |
+        cd ../airline-django
+        source venv/bin/activate
         python manage.py runserver &
         sleep 5
 
     - name: Run Robot Framework Tests
-      run: |
-        # Ici nous sommes dans le dossier d'automation (racine du checkout)
-        # Le mot-clé "Reset Test Data" trouvera bien "../airline-django"
-        robot --variable BROWSER:headlesschrome tests/
+      run: robot --variable BROWSER:headlesschrome tests/
 
     - name: Upload Results
       if: always()
