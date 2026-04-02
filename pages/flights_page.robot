@@ -24,5 +24,14 @@ Verify Flights Data
     ${count}=    Get Element Count    css:[data-test='flight-details-link']
     Should Be True    ${count} > 0    msg=Aucun vol affiché dans la liste
 
+Verify Multiple Flights Displayed
+    ${count}=    Get Element Count    css:[data-test='flight-details-link']
+    Should Be True    ${count} >= 3    msg=Moins de 3 vols affichés — page trop vide
+
+Click Flight By Index
+    [Arguments]    ${index}
+    Wait Until Element Is Visible    css:[data-test='flight-details-link']    timeout=10s
+    Click Element    xpath=(//a[@data-test='flight-details-link'])[${index}]
+
 Close Flights Session
     Close Browser
