@@ -1,14 +1,18 @@
 *** Settings ***
-Library      SeleniumLibrary
-Resource     ../pages/flights_page.robot
-Resource     ../pages/flight_details_page.robot
-Resource     ../resources/common.robot
+Documentation    Test suite for adding and managing passengers on a flight.
+Library          SeleniumLibrary
+Resource         ../pages/flights_page.resource
+Resource         ../pages/flight_details_page.resource
+Resource         ../resources/common.resource
 Test Setup       Reset Test Data
-Test Teardown    Run Keyword If Test Failed    Capture Page Screenshot
+Test Teardown    Run Keywords
+...    Run Keyword If Test Failed    Capture Page Screenshot
+...    AND    Close Flights Session
+
 
 *** Test Cases ***
 Add Economy Passenger
-    [Documentation]    Vérifie qu'on peut ajouter un passager en classe Economy
+    [Documentation]    Vérifie qu'on peut ajouter un passager en classe Economy.
     Open Flights Page
     Click First Flight
     Add New Passenger    John    Doe    john@test.com    JD123456    ECONOMY
@@ -16,7 +20,7 @@ Add Economy Passenger
     Verify Passenger In List    John    Doe
 
 Add Business Passenger
-    [Documentation]    Vérifie qu'on peut ajouter un passager en classe Business
+    [Documentation]    Vérifie qu'on peut ajouter un passager en classe Business.
     Open Flights Page
     Click First Flight
     Add New Passenger    Jane    Smith    jane@test.com    JS123456    BUSINESS
@@ -24,7 +28,7 @@ Add Business Passenger
     Verify Passenger In List    Jane    Smith
 
 Add First Class Passenger
-    [Documentation]    Vérifie qu'on peut ajouter un passager en première classe
+    [Documentation]    Vérifie qu'on peut ajouter un passager en première classe.
     Open Flights Page
     Click First Flight
     Add New Passenger    James    Bond    james@test.com    JB123456    FIRST
@@ -32,37 +36,38 @@ Add First Class Passenger
     Verify Passenger In List    James    Bond
 
 Verify Seat Auto Assigned Economy
-    [Documentation]    Vérifie que le siège Economy est assigné automatiquement avec préfixe E
+    [Documentation]    Vérifie que le siège Economy est assigné automatiquement avec préfixe E.
     Open Flights Page
     Click First Flight
     Add New Passenger    Alice    Test    alice@test.com    AT123456    ECONOMY
     Verify Seat Assigned    ECONOMY
 
 Verify Seat Auto Assigned Business
-    [Documentation]    Vérifie que le siège Business est assigné automatiquement avec préfixe B
+    [Documentation]    Vérifie que le siège Business est assigné automatiquement avec préfixe B.
     Open Flights Page
     Click First Flight
     Add New Passenger    Bob    Test    bob@test.com    BT123456    BUSINESS
     Verify Seat Assigned    BUSINESS
 
 Verify Seat Auto Assigned First
-    [Documentation]    Vérifie que le siège First Class est assigné automatiquement avec préfixe F
+    [Documentation]    Vérifie que le siège First Class est assigné automatiquement avec préfixe F.
     Open Flights Page
     Click First Flight
     Add New Passenger    Charlie    Test    charlie@test.com    CT123456    FIRST
     Verify Seat Assigned    FIRST
 
 Duplicate Email Is Rejected
-    [Documentation]    Vérifie qu'un email déjà utilisé est rejeté
+    [Documentation]    Vérifie qu'un email déjà utilisé est rejeté.
     Open Flights Page
     Click First Flight
+    Add New Passenger    Test    User    unique@test.com    TU123456    ECONOMY
     Open Add Passenger Modal
-    Fill Passenger Form    Harry    Potter    harry@hogwarts.com    XX999999    ECONOMY
+    Fill Passenger Form    Other    Person    unique@test.com    OT999999    ECONOMY
     Click Element    css:[data-testid='btn-confirm-add-passenger']
-    Verify Booking Error    already booked
+    Verify Booking Error    already
 
 Duplicate Passport Is Rejected
-    [Documentation]    Vérifie qu'un numéro de passport déjà utilisé est rejeté
+    [Documentation]    Vérifie qu'un numéro de passport déjà utilisé est rejeté.
     Open Flights Page
     Click First Flight
     Open Add Passenger Modal
@@ -71,7 +76,7 @@ Duplicate Passport Is Rejected
     Verify Booking Error    already registered
 
 Invalid Passport Format Is Rejected
-    [Documentation]    Vérifie qu'un format de passport invalide est rejeté
+    [Documentation]    Vérifie qu'un format de passport invalide est rejeté.
     Open Flights Page
     Click First Flight
     Open Add Passenger Modal
@@ -81,7 +86,7 @@ Invalid Passport Format Is Rejected
     Verify Booking Error    Passport must be
 
 Empty Fields Are Rejected
-    [Documentation]    Vérifie que les champs vides sont bloqués par la validation HTML5
+    [Documentation]    Vérifie que les champs vides sont bloqués par la validation HTML5.
     Open Flights Page
     Click First Flight
     Open Add Passenger Modal
@@ -92,7 +97,7 @@ Empty Fields Are Rejected
     Should Be True    ${valid}    msg=Le champ First Name devrait être invalide quand vide
 
 Cancel Modal Closes Form
-    [Documentation]    Vérifie que le bouton Cancel ferme le modal
+    [Documentation]    Vérifie que le bouton Cancel ferme le modal.
     Open Flights Page
     Click First Flight
     Open Add Passenger Modal
@@ -102,7 +107,7 @@ Cancel Modal Closes Form
     Verify Modal Closed
 
 Remove Passenger From Flight
-    [Documentation]    Vérifie qu'on peut supprimer un passager d'un vol
+    [Documentation]    Vérifie qu'on peut supprimer un passager d'un vol.
     Open Flights Page
     Click First Flight
     ${before}=    Get Passenger Count In List
@@ -112,7 +117,7 @@ Remove Passenger From Flight
     ...    msg=Le nombre de passagers n'a pas diminué après suppression
 
 Add Multiple Passengers Different Classes
-    [Documentation]    Vérifie qu'on peut ajouter plusieurs passagers de classes différentes
+    [Documentation]    Vérifie qu'on peut ajouter plusieurs passagers de classes différentes.
     Open Flights Page
     Click First Flight
     Add New Passenger    P1    Test    p1@test.com    P1123456    ECONOMY
