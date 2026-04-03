@@ -83,4 +83,3 @@ Click First Search Result
     Wait Until Element Is Visible    css:[data-testid='search-flight-link']    timeout=10s
     Click Element                    xpath=(//a[@data-testid='search-flight-link'])[1]
     Wait Until Element Is Visible    css:[id='flight-header']    timeout=10s
-    
