@@ -86,7 +86,7 @@ jobs:
         robot \
           --outputdir results \
           --variable BROWSER:headlesschrome \
-          --variable CHROME_OPTIONS:"--headless --no-sandbox --disable-dev-shm-usage --disable-gpu" \
+          --variable CHROME_OPTIONS:"--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --window-size=1920,1080" \
           tests/
 
     - name: Upload Results
@@ -95,3 +95,4 @@ jobs:
       with:
         name: robot-results
         path: results/
+        
