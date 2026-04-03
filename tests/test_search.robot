@@ -4,7 +4,7 @@ Library          SeleniumLibrary
 Resource         ../pages/flights_page.resource
 Resource         ../pages/search_page.resource
 Resource         ../resources/common.resource
-Test Setup     Reset Test Data
+Test Setup       Reset Test Data
 Test Teardown    Run Keywords
 ...    Run Keyword If Test Failed    Capture Page Screenshot
 ...    AND    Close Flights Session
