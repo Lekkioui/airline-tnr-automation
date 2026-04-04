@@ -69,11 +69,12 @@ L'application **AirLine** est une application Django de gestion de vols aériens
 ---
 
 ## Architecture du projet
+```
 airline-automation/
 ├── .github/
 │   └── workflows/
-│       └── tests.yml          # Pipeline CI/CD GitHub Actions
-├── pages/                     # Page Objects (POM)
+│       └── tests.yml
+├── pages/
 │   ├── flights_page.resource
 │   ├── flight_details_page.resource
 │   ├── passenger_page.resource
@@ -81,10 +82,10 @@ airline-automation/
 │   ├── status_page.resource
 │   ├── users_page.resource
 │   └── responsive_page.resource
-├── resources/                 # Ressources partagées
-│   ├── common.resource        # Keywords communs + configuration Chrome
-│   └── variables.resource     # Variables centralisées (URLs, sélecteurs, données)
-├── tests/                     # Suites de tests
+├── resources/
+│   ├── common.resource
+│   └── variables.resource
+├── tests/
 │   ├── test_flights.robot
 │   ├── test_add_passenger.robot
 │   ├── test_passenger.robot
@@ -92,10 +93,11 @@ airline-automation/
 │   ├── test_status.robot
 │   ├── test_users.robot
 │   └── test_responsive.robot
-├── results/                   # Rapports générés (gitignored)
-│   └── screenshots/           # Screenshots responsive
+├── results/
+│   └── screenshots/
 ├── requirements.txt
 └── README.md
+```
 
 ---
 
@@ -195,6 +197,7 @@ python ../airline-django/manage.py setup_test_data
 Le pipeline GitHub Actions s'exécute automatiquement à chaque `push` ou `pull_request` sur la branche `main`.
 
 ### Jobs
+```
 push / pull_request
 │
 ▼
@@ -209,6 +212,7 @@ push / pull_request
 │
 ▼
 Upload artifacts (report.html, log.html, output.xml)
+```
 
 ### Fonctionnalités du pipeline
 
@@ -249,6 +253,7 @@ Upload artifacts (report.html, log.html, output.xml)
 Le projet applique le **Page Object Model (POM)** — standard industriel en test automation.
 
 ### Principe
+```
 ┌─────────────────────────────────────────────┐
 │              Tests (.robot)                 │
 │  "Ce qu'on teste"                           │
@@ -266,6 +271,7 @@ Le projet applique le **Page Object Model (POM)** — standard industriel en tes
 │  common.resource — keywords communs         │
 │  variables.resource — sélecteurs, URLs      │
 └─────────────────────────────────────────────┘
+```
 
 ### Avantages
 
@@ -345,7 +351,7 @@ Les tests responsive vérifient que l'application s'affiche correctement sur tro
 - Bouton Add Passenger
 
 ### Screenshots
-
+```
 Les screenshots sont sauvegardés automatiquement dans `results/screenshots/` avec des noms explicites :
 results/screenshots/
 ├── flights_mobile.png
@@ -357,18 +363,20 @@ results/screenshots/
 ├── search_mobile.png
 ├── search_tablet.png
 └── search_desktop.png
-
+```
 ---
 
 ## Intégration Xray
 
-> **Statut : À venir** — En attente des accès Jira
+> **Statut : À venir** 
+
 
 ### Plan d'intégration
 
 **Xray** est un plugin de gestion de tests pour Jira qui permet de lier les tests automatisés aux cas de test Jira, gérer les campagnes de tests et tracer la couverture des exigences.
 
 ### Architecture prévue
+```
 Robot Framework
 │
 │ génère output.xml
@@ -383,6 +391,7 @@ Xray (Jira)
 Tableau de bord des résultats
 Traçabilité exigences ↔ tests
 Historique des campagnes
+```
 
 ### Étapes d'intégration prévues
 
