@@ -41,3 +41,7 @@ Reset Test Data
 
     Should Be Equal As Integers    ${result.rc}    0
     ...    msg=setup_test_data a échoué:\n${result.stderr}
+
+Create Results Directories
+    [Documentation]    Creates the results and screenshots directories if they don't exist.
+    Create Directory    results/screenshots
