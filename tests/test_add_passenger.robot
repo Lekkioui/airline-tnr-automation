@@ -15,25 +15,31 @@ Add Economy Passenger
     [Documentation]    Vérifie qu'on peut ajouter un passager en classe Economy.
     Open Flights Page
     Click First Flight
-    Add New Passenger    John    Doe    john@test.com    JD123456    ECONOMY
+    Add New Passenger
+    ...    ${PASSENGER_FIRST_ECONOMY}    ${PASSENGER_LAST_ECONOMY}
+    ...    ${PASSENGER_EMAIL_ECONOMY}    ${PASSENGER_PASSPORT_ECONOMY}    ECONOMY
     Verify Passenger Added
-    Verify Passenger In List    John    Doe
+    Verify Passenger In List    ${PASSENGER_FIRST_ECONOMY}    ${PASSENGER_LAST_ECONOMY}
 
 Add Business Passenger
     [Documentation]    Vérifie qu'on peut ajouter un passager en classe Business.
     Open Flights Page
     Click First Flight
-    Add New Passenger    Jane    Smith    jane@test.com    JS123456    BUSINESS
+    Add New Passenger
+    ...    ${PASSENGER_FIRST_BUSINESS}    ${PASSENGER_LAST_BUSINESS}
+    ...    ${PASSENGER_EMAIL_BUSINESS}    ${PASSENGER_PASSPORT_BUSINESS}    BUSINESS
     Verify Passenger Added
-    Verify Passenger In List    Jane    Smith
+    Verify Passenger In List    ${PASSENGER_FIRST_BUSINESS}    ${PASSENGER_LAST_BUSINESS}
 
 Add First Class Passenger
     [Documentation]    Vérifie qu'on peut ajouter un passager en première classe.
     Open Flights Page
     Click First Flight
-    Add New Passenger    James    Bond    james@test.com    JB123456    FIRST
+    Add New Passenger
+    ...    ${PASSENGER_FIRST_FIRST}    ${PASSENGER_LAST_FIRST}
+    ...    ${PASSENGER_EMAIL_FIRST}    ${PASSENGER_PASSPORT_FIRST}    FIRST
     Verify Passenger Added
-    Verify Passenger In List    James    Bond
+    Verify Passenger In List    ${PASSENGER_FIRST_FIRST}    ${PASSENGER_LAST_FIRST}
 
 Verify Seat Auto Assigned Economy
     [Documentation]    Vérifie que le siège Economy est assigné automatiquement avec préfixe E.
@@ -63,7 +69,7 @@ Duplicate Email Is Rejected
     Add New Passenger    Test    User    unique@test.com    TU123456    ECONOMY
     Open Add Passenger Modal
     Fill Passenger Form    Other    Person    unique@test.com    OT999999    ECONOMY
-    Click Element    css:[data-testid='btn-confirm-add-passenger']
+    Click Element    ${SEL_BTN_CONFIRM}
     Verify Booking Error    already
 
 Duplicate Passport Is Rejected
@@ -72,7 +78,7 @@ Duplicate Passport Is Rejected
     Click First Flight
     Open Add Passenger Modal
     Fill Passenger Form    New    Person    new@test.com    HP123456    ECONOMY
-    Click Element    css:[data-testid='btn-confirm-add-passenger']
+    Click Element    ${SEL_BTN_CONFIRM}
     Verify Booking Error    already registered
 
 Invalid Passport Format Is Rejected
@@ -81,8 +87,8 @@ Invalid Passport Format Is Rejected
     Click First Flight
     Open Add Passenger Modal
     Fill Passenger Form    Test    User    test@test.com    INVALID    ECONOMY
-    Scroll Element Into View    css:[data-testid='btn-confirm-add-passenger']
-    Click Element               css:[data-testid='btn-confirm-add-passenger']
+    Scroll Element Into View    ${SEL_BTN_CONFIRM}
+    Click Element               ${SEL_BTN_CONFIRM}
     Verify Booking Error    Passport must be
 
 Empty Fields Are Rejected
@@ -90,8 +96,8 @@ Empty Fields Are Rejected
     Open Flights Page
     Click First Flight
     Open Add Passenger Modal
-    Scroll Element Into View    css:[data-testid='btn-confirm-add-passenger']
-    Click Element               css:[data-testid='btn-confirm-add-passenger']
+    Scroll Element Into View    ${SEL_BTN_CONFIRM}
+    Click Element               ${SEL_BTN_CONFIRM}
     ${valid}=    Execute Javascript
     ...    return document.getElementById('input-first').validity.valueMissing
     Should Be True    ${valid}    msg=Le champ First Name devrait être invalide quand vide
@@ -102,8 +108,8 @@ Cancel Modal Closes Form
     Click First Flight
     Open Add Passenger Modal
     Verify Modal Open
-    Scroll Element Into View    css:[data-testid='btn-cancel-modal']
-    Click Element               css:[data-testid='btn-cancel-modal']
+    Scroll Element Into View    ${SEL_BTN_CANCEL_MODAL}
+    Click Element               ${SEL_BTN_CANCEL_MODAL}
     Verify Modal Closed
 
 Remove Passenger From Flight

@@ -1,20 +1,13 @@
 *** Settings ***
 Documentation    Page Object for the users login page.
 Library          SeleniumLibrary
-Resource        ../resources/common.resource
-
-
-*** Variables ***
-${LOGIN_URL}      http://127.0.0.1:8000/users/login
-${FLIGHTS_URL}    http://127.0.0.1:8000/flights/
-${ADMIN_USER}     anasse
-${ADMIN_PASS}     anasse
+Resource         ../resources/common.resource
 
 
 *** Keywords ***
 Open Users Page
     [Documentation]    Opens the login page in a headless Chrome browser.
-    ${options}=     Get Chrome Options
+    ${options}=    Get Chrome Options
     Create WebDriver    Chrome    options=${options}
     Maximize Browser Window
     Go To    ${LOGIN_URL}
@@ -34,12 +27,12 @@ Login With Credentials
 
 Verify Login Success
     [Documentation]    Verifies that login redirects to the flights page.
-    Wait Until Location Contains     /flights/                      timeout=10s
-    Wait Until Element Is Visible    css:[id='page-title-flights']  timeout=10s
+    Wait Until Location Contains     /flights/                         timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Visible    ${SEL_PAGE_TITLE_FLIGHTS}        timeout=${DEFAULT_TIMEOUT}
 
 Verify Login Failed
     [Documentation]    Verifies that an error message is shown on failed login.
-    Wait Until Page Contains Element    name:username         timeout=5s
+    Wait Until Page Contains Element    name:username    timeout=${SHORT_TIMEOUT}
     Page Should Contain Element         name:password
     Page Should Contain                 Invalid credentials
 

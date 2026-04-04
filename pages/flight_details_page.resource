@@ -1,45 +1,46 @@
 *** Settings ***
 Documentation    Page Object for the flight details and passenger management page.
 Library          SeleniumLibrary
+Resource         ../resources/common.resource
 
 
 *** Keywords ***
 Click First Flight
     [Documentation]    Clicks on the first flight link in the flights list.
-    Wait Until Element Is Visible    css:[data-test='flight-details-link']    timeout=10s
+    Wait Until Element Is Visible    ${SEL_FLIGHT_LINK}    timeout=${DEFAULT_TIMEOUT}
     Click Element                    xpath=(//a[@data-test='flight-details-link'])[1]
 
 Verify Flight Details Page
     [Documentation]    Verifies that all flight detail fields are visible.
-    Wait Until Element Is Visible    css:[id='flight-header']    timeout=10s
-    Page Should Contain Element      css:[id='detail-origin']
-    Page Should Contain Element      css:[id='detail-destination']
-    Page Should Contain Element      css:[id='detail-duration']
-    Page Should Contain Element      css:[data-testid='detail-status']
-    Page Should Contain Element      css:[data-testid='detail-capacity']
+    Wait Until Element Is Visible    ${SEL_FLIGHT_HEADER}       timeout=${DEFAULT_TIMEOUT}
+    Page Should Contain Element      ${SEL_DETAIL_ORIGIN}
+    Page Should Contain Element      ${SEL_DETAIL_DESTINATION}
+    Page Should Contain Element      ${SEL_DETAIL_DURATION}
+    Page Should Contain Element      ${SEL_DETAIL_STATUS}
+    Page Should Contain Element      ${SEL_DETAIL_CAPACITY}
 
 Fill Passenger Form
     [Documentation]    Fills in the add passenger modal form fields.
     [Arguments]    ${first}    ${last}    ${email}    ${passport}    ${seat_class}=ECONOMY
-    Input Text    css:[data-testid='input-first']      ${first}
-    Input Text    css:[data-testid='input-last']       ${last}
-    Input Text    css:[data-testid='input-email']      ${email}
-    Input Text    css:[data-testid='input-passport']   ${passport}
-    Select From List By Value    css:[data-testid='input-seat-class']    ${seat_class}
+    Input Text    ${SEL_INPUT_FIRST}       ${first}
+    Input Text    ${SEL_INPUT_LAST}        ${last}
+    Input Text    ${SEL_INPUT_EMAIL}       ${email}
+    Input Text    ${SEL_INPUT_PASSPORT}    ${passport}
+    Select From List By Value    ${SEL_INPUT_SEAT_CLASS}    ${seat_class}
 
 Open Add Passenger Modal
     [Documentation]    Opens the add passenger modal and waits for it to be visible.
     Execute Javascript    document.getElementById('modal-add-passenger').classList.remove('open')
-    Wait Until Element Is Visible    css:[data-testid='btn-open-add-passenger']    timeout=15s
-    Scroll Element Into View         css:[data-testid='btn-open-add-passenger']
-    Click Element                    css:[data-testid='btn-open-add-passenger']
-    Wait Until Element Is Visible    css:[data-testid='modal-add-passenger']       timeout=15s
+    Wait Until Element Is Visible    ${SEL_BTN_OPEN_MODAL}    timeout=${LONG_TIMEOUT}
+    Scroll Element Into View         ${SEL_BTN_OPEN_MODAL}
+    Click Element                    ${SEL_BTN_OPEN_MODAL}
+    Wait Until Element Is Visible    ${SEL_MODAL}             timeout=${LONG_TIMEOUT}
 
 Submit Passenger Form
     [Documentation]    Submits the passenger form and waits for the passenger list to update.
-    Scroll Element Into View    css:[data-testid='btn-confirm-add-passenger']
-    Click Element               css:[data-testid='btn-confirm-add-passenger']
-    Wait Until Element Is Visible    css:[data-testid='passenger-list']    timeout=30s
+    Scroll Element Into View    ${SEL_BTN_CONFIRM}
+    Click Element               ${SEL_BTN_CONFIRM}
+    Wait Until Element Is Visible    ${SEL_PASSENGER_LIST}    timeout=${LONG_TIMEOUT}
     Execute Javascript    document.getElementById('modal-add-passenger').classList.remove('open')
 
 Add New Passenger
@@ -51,8 +52,8 @@ Add New Passenger
 
 Verify Passenger Added
     [Documentation]    Verifies that at least one passenger appears in the passenger list.
-    Page Should Contain Element    css:[data-testid='passenger-list']
-    ${count}=    Get Element Count    css:[data-testid='passenger-item']
+    Page Should Contain Element    ${SEL_PASSENGER_LIST}
+    ${count}=    Get Element Count    ${SEL_PASSENGER_ITEM}
     Should Be True    ${count} > 0    msg=La liste des passagers est vide après booking
 
 Verify Passenger In List
@@ -63,41 +64,41 @@ Verify Passenger In List
 Verify Booking Error
     [Documentation]    Verifies that a booking error message is displayed.
     [Arguments]    ${expected_message}
-    Wait Until Element Is Visible    css:[data-testid='booking-error']    timeout=10s
-    Element Should Contain           css:[data-testid='booking-error']    ${expected_message}
+    Wait Until Element Is Visible    ${SEL_BOOKING_ERROR}    timeout=${DEFAULT_TIMEOUT}
+    Element Should Contain           ${SEL_BOOKING_ERROR}    ${expected_message}
 
 Verify Modal Open
     [Documentation]    Verifies that the add passenger modal is visible.
-    Element Should Be Visible    css:[data-testid='modal-add-passenger']
+    Element Should Be Visible    ${SEL_MODAL}
 
 Verify Modal Closed
     [Documentation]    Verifies that the add passenger modal is not visible.
-    Element Should Not Be Visible    css:[data-testid='modal-add-passenger']
+    Element Should Not Be Visible    ${SEL_MODAL}
 
 Remove First Passenger
     [Documentation]    Removes the first passenger in the list and returns their ID.
-    Wait Until Element Is Visible    css:[data-testid='btn-remove']    timeout=10s
-    ${passenger_id}=    Get Element Attribute    css:[data-testid='btn-remove']    data-passenger-id
-    Scroll Element Into View    css:[data-testid='btn-remove']
-    Click Element                css:[data-testid='btn-remove']
-    Wait Until Element Is Visible    css:[id='flight-header']    timeout=30s
+    Wait Until Element Is Visible    ${SEL_BTN_REMOVE}    timeout=${DEFAULT_TIMEOUT}
+    ${passenger_id}=    Get Element Attribute    ${SEL_BTN_REMOVE}    data-passenger-id
+    Scroll Element Into View    ${SEL_BTN_REMOVE}
+    Click Element               ${SEL_BTN_REMOVE}
+    Wait Until Element Is Visible    ${SEL_FLIGHT_HEADER}    timeout=${LONG_TIMEOUT}
     RETURN    ${passenger_id}
 
 Get Passenger Count In List
     [Documentation]    Returns the number of passengers currently displayed in the list.
-    ${count}=    Get Element Count    css:[data-testid='passenger-item']
+    ${count}=    Get Element Count    ${SEL_PASSENGER_ITEM}
     RETURN    ${count}
 
 Verify Flight Status
     [Documentation]    Verifies that the flight status matches the expected value.
     [Arguments]    ${expected_status}
-    ${status}=    Get Element Attribute    css:[data-testid='detail-status']    data-status
+    ${status}=    Get Element Attribute    ${SEL_DETAIL_STATUS}    data-status
     Should Be Equal    ${status}    ${expected_status}
 
 Verify Booking Disabled
     [Documentation]    Verifies that booking is disabled and the add passenger button is hidden.
-    Page Should Contain Element      css:[data-testid='booking-disabled']
-    Element Should Not Be Visible    css:[data-testid='btn-open-add-passenger']
+    Page Should Contain Element      ${SEL_BOOKING_DISABLED}
+    Element Should Not Be Visible    ${SEL_BTN_OPEN_MODAL}
 
 Verify Seat Assigned
     [Documentation]    Verifies that the last added passenger has a seat matching their class prefix.
@@ -106,7 +107,7 @@ Verify Seat Assigned
     ...    '${seat_class}' == 'FIRST'      F
     ...    '${seat_class}' == 'BUSINESS'   B
     ...    E
-    ${seats}=       Get WebElements    css:[data-testid='passenger-seat']
+    ${seats}=       Get WebElements    ${SEL_PASSENGER_SEAT}
     ${last_seat}=   Set Variable       ${seats}[-1]
     ${seat_text}=   Get Text           ${last_seat}
     Should Start With    ${seat_text}    ${prefix}

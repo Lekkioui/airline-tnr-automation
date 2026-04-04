@@ -3,6 +3,7 @@ Documentation    Common keywords for test data management and browser configurat
 Library          OperatingSystem
 Library          Process
 Library          SeleniumLibrary
+Resource         variables.resource
 
 
 *** Keywords ***

@@ -35,7 +35,7 @@ Search By Origin
     [Documentation]    Vérifie qu'on peut filtrer les vols par aéroport d'origine.
     Open Flights Page
     Go To Search Page
-    Select Search Origin    New York City (JFK)
+    Select Search Origin    ${AIRPORT_JFK}
     Submit Search
     Verify Search Has Results
 
@@ -43,7 +43,7 @@ Search By Destination
     [Documentation]    Vérifie qu'on peut filtrer les vols par aéroport de destination.
     Open Flights Page
     Go To Search Page
-    Select Search Destination    London (LHR)
+    Select Search Destination    ${AIRPORT_LHR}
     Submit Search
     Verify Search Has Results
 
@@ -69,8 +69,8 @@ Search With No Matching Results
     [Documentation]    Vérifie qu'une recherche sans résultats affiche le message approprié.
     Open Flights Page
     Go To Search Page
-    Select Search Origin         New York City (JFK)
-    Select Search Destination    New York City (JFK)
+    Select Search Origin         ${AIRPORT_JFK}
+    Select Search Destination    ${AIRPORT_JFK}
     Submit Search
     Verify No Results Found
 
@@ -78,8 +78,8 @@ Search By Origin And Destination
     [Documentation]    Vérifie qu'on peut combiner origine et destination.
     Open Flights Page
     Go To Search Page
-    Select Search Origin         New York City (JFK)
-    Select Search Destination    London (LHR)
+    Select Search Origin         ${AIRPORT_JFK}
+    Select Search Destination    ${AIRPORT_LHR}
     Submit Search
     Verify Search Has Results
     Verify Search Results Count    1
@@ -88,7 +88,7 @@ Search By Origin And Status
     [Documentation]    Vérifie qu'on peut combiner origine et statut.
     Open Flights Page
     Go To Search Page
-    Select Search Origin    New York City (JFK)
+    Select Search Origin    ${AIRPORT_JFK}
     Select Search Status    SCHEDULED
     Submit Search
     Verify Search Has Results
@@ -109,4 +109,4 @@ Search Result Links To Flight Detail
     Go To Search Page
     Submit Search
     Click First Search Result
-    Page Should Contain Element    css:[id='flight-header']
+    Page Should Contain Element    ${SEL_FLIGHT_HEADER}
