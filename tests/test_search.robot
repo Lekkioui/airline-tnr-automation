@@ -10,6 +10,11 @@ Test Teardown    Run Keywords
 ...    AND    Close Flights Session
 
 
+*** Variables ***
+${DATE_EXISTING}      2026-04-20
+${DATE_NO_RESULT}     2026-01-01
+
+
 *** Test Cases ***
 Search Page Is Accessible
     [Documentation]    Vérifie que la page recherche est accessible depuis la liste des vols.
@@ -65,6 +70,33 @@ Search By Status Cancelled
     Verify Search Has Results
     Verify Result Contains Status    CANCELLED
 
+Search By Date With Results
+    [Documentation]    Vérifie qu'on peut filtrer les vols par date de départ.
+    Open Flights Page
+    Go To Search Page
+    Select Search Date    ${DATE_EXISTING}
+    Submit Search
+    Verify Search Has Results
+    Verify Search Results Count    1
+
+Search By Date With No Results
+    [Documentation]    Vérifie qu'une date sans vol affiche le message approprié.
+    Open Flights Page
+    Go To Search Page
+    Select Search Date    ${DATE_NO_RESULT}
+    Submit Search
+    Verify No Results Found
+
+Search By Origin And Date
+    [Documentation]    Vérifie qu'on peut combiner origine et date.
+    Open Flights Page
+    Go To Search Page
+    Select Search Origin    ${AIRPORT_JFK}
+    Select Search Date      ${DATE_EXISTING}
+    Submit Search
+    Verify Search Has Results
+    Verify Search Results Count    1
+
 Search With No Matching Results
     [Documentation]    Vérifie qu'une recherche sans résultats affiche le message approprié.
     Open Flights Page
@@ -97,7 +129,7 @@ Reset Clears Filters
     [Documentation]    Vérifie que le bouton Reset remet les filtres à zéro.
     Open Flights Page
     Go To Search Page
-    Select Search Status    CANCELLED
+    Select Search Status    SCHEDULED
     Submit Search
     Verify Search Has Results
     Reset Search

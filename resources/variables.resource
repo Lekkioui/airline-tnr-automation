@@ -80,6 +80,7 @@ ${SEL_SEARCH_FLIGHT_LINK}     css:[data-testid='search-flight-link']
 ${SEL_SEARCH_INITIAL_STATE}   css:[data-testid='search-initial-state']
 ${SEL_SEARCH_NO_RESULTS}      css:[data-testid='search-no-results']
 ${SEL_PAGE_TITLE_SEARCH}      css:[data-testid='page-title-search']
+${SEL_SEARCH_DATE}            css:[data-testid='search-date']
 
 # Selectors — Passenger Profile
 ${SEL_PASSENGER_HEADER}          css:[data-testid='passenger-header']

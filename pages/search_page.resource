@@ -18,25 +18,43 @@ Verify Search Page Loaded
     Page Should Contain Element      ${SEL_SEARCH_ORIGIN}
     Page Should Contain Element      ${SEL_SEARCH_DESTINATION}
     Page Should Contain Element      ${SEL_SEARCH_STATUS}
+    Page Should Contain Element      ${SEL_SEARCH_DATE}
 
 Select Search Origin
     [Documentation]    Selects an origin airport by its visible text.
     [Arguments]    ${airport}
-    Select From List By Label    ${SEL_SEARCH_ORIGIN}    ${airport}
+    Wait Until Element Is Visible    ${SEL_SEARCH_ORIGIN}    timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Enabled    ${SEL_SEARCH_ORIGIN}    timeout=${DEFAULT_TIMEOUT}
+    Select From List By Label        ${SEL_SEARCH_ORIGIN}    ${airport}
 
 Select Search Destination
     [Documentation]    Selects a destination airport by its visible text.
     [Arguments]    ${airport}
-    Select From List By Label    ${SEL_SEARCH_DESTINATION}    ${airport}
+    Wait Until Element Is Visible    ${SEL_SEARCH_DESTINATION}    timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Enabled    ${SEL_SEARCH_DESTINATION}    timeout=${DEFAULT_TIMEOUT}
+    Select From List By Label        ${SEL_SEARCH_DESTINATION}    ${airport}
 
 Select Search Status
     [Documentation]    Selects a flight status filter.
     [Arguments]    ${status}
-    Select From List By Value    ${SEL_SEARCH_STATUS}    ${status}
+    Wait Until Element Is Visible    ${SEL_SEARCH_STATUS}    timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Enabled    ${SEL_SEARCH_STATUS}    timeout=${DEFAULT_TIMEOUT}
+    Select From List By Value        ${SEL_SEARCH_STATUS}    ${status}
+
+Select Search Date
+    [Documentation]    Inputs a departure date via JavaScript with change event trigger.
+    [Arguments]    ${date}
+    Execute Javascript
+    ...    var el = document.querySelector("[data-testid='search-date']");
+    ...    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    ...    nativeInputValueSetter.call(el, '${date}');
+    ...    el.dispatchEvent(new Event('input', { bubbles: true }));
+    ...    el.dispatchEvent(new Event('change', { bubbles: true }));
 
 Submit Search
     [Documentation]    Submits the search form.
     Click Element    ${SEL_BTN_SEARCH_SUBMIT}
+    Sleep    0.5s
     Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
 
 Reset Search
