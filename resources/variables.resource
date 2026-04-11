@@ -118,3 +118,6 @@ ${PASSENGER_PASSPORT_FIRST}      JB123456
 # Test Data — Airports
 ${AIRPORT_JFK}    New York City (JFK)
 ${AIRPORT_LHR}    London (LHR)
+
+# Selectors — Users (à ajouter dans la section "Selectors — Users")
+${SEL_BTN_LOGOUT}            css:[data-testid='btn-logout']

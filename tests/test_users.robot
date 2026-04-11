@@ -1,9 +1,9 @@
 *** Settings ***
-Documentation    Test suite for user authentication.
+Documentation    Test suite for user authentication and logout.
 Library          SeleniumLibrary
 Resource         ../pages/users_page.resource
 Resource         ../resources/common.resource
-Test Setup       Reset Test Data
+Test Setup     Reset Test Data
 Test Teardown    Run Keyword If Test Failed    Capture Page Screenshot
 
 
@@ -21,10 +21,11 @@ Invalid Login Test
     Verify Login Failed
 
 Logout Test
-    [Documentation]    Vérifie que la déconnexion fonctionne.
+    [Documentation]    Vérifie que le bouton Logout dans la topbar déconnecte l'utilisateur
+    ...                et le redirige vers la page de login.
     Open Users Page
     Login As Admin
     Verify Login Success
-    Go To    http://127.0.0.1:8000/users/logout
-    Wait Until Page Contains    Logged Out    timeout=10s
-    Wait Until Location Contains    /users/    timeout=10s
+    Click Logout Button
+    Verify Logout Success
+    [Tags]    logout    authentication

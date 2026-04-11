@@ -36,6 +36,16 @@ Verify Login Failed
     Page Should Contain Element         name:password
     Page Should Contain                 Invalid credentials
 
+Click Logout Button
+    [Documentation]    Clicks the logout button visible in the topbar.
+    Wait Until Element Is Visible    ${SEL_BTN_LOGOUT}    timeout=${DEFAULT_TIMEOUT}
+    Click Element                    ${SEL_BTN_LOGOUT}
+
+Verify Logout Success
+    [Documentation]    Verifies that logout redirects to the login page.
+    Wait Until Location Contains     /users/login    timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Visible    name:username   timeout=${DEFAULT_TIMEOUT}
+
 Close Users Session
     [Documentation]    Closes the browser session.
     Close Browser
