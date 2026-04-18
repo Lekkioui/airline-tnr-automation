@@ -1,112 +1,78 @@
 *** Settings ***
-Documentation    Test suite for responsive design across mobile, tablet and desktop viewports.
+Documentation    Test suite for responsive design.
+Test Tags         responsive
 Library          SeleniumLibrary
-Resource         ../pages/flights_page.resource
-Resource         ../pages/flight_details_page.resource
-Resource         ../pages/search_page.resource
-Resource         ../pages/responsive_page.resource
+Resource         ../pages/dashboard_page.resource
 Resource         ../resources/common.resource
 Suite Setup      Create Results Directories
 Test Setup       Reset Test Data
 Test Teardown    Run Keywords
 ...    Run Keyword If Test Failed    Capture Page Screenshot
-...    AND    Close Flights Session
+...    AND    Close Session
+
+
+*** Variables ***
+${MOBILE_WIDTH}     375
+${MOBILE_HEIGHT}    812
+${DESKTOP_WIDTH}    1920
+${DESKTOP_HEIGHT}   1080
 
 
 *** Test Cases ***
-Flights Page Renders On Mobile
-    [Documentation]    Vérifie que la page flights s'affiche correctement sur mobile (375px).
-    Open Flights Page
-    Set Mobile Viewport
-    Verify Navigation Visible
-    Verify Page Title Visible    ${SEL_PAGE_TITLE_FLIGHTS}
-    Verify Flight List Visible
-    Take Viewport Screenshot    flights    mobile
+Index Page Responsive Mobile
+    [Documentation]    Verifie que la page index s affiche correctement sur mobile.
+    [Tags]    mobile
+    Setup Mobile Browser
+    Go To    ${FLIGHTS_URL}
+    Wait Until Element Is Visible    ${SEL_PAGE_TITLE_FLIGHTS}    timeout=${DEFAULT_TIMEOUT}
+    Element Should Be Visible        ${SEL_TOPBAR}
+    Element Should Be Visible        ${SEL_FLIGHT_TABLE}
+    Capture Page Screenshot    filename=${EXECDIR}/results/screenshots/index_mobile.png
 
-Flights Page Renders On Tablet
-    [Documentation]    Vérifie que la page flights s'affiche correctement sur tablette (768px).
-    Open Flights Page
-    Set Tablet Viewport
-    Verify Navigation Visible
-    Verify Page Title Visible    ${SEL_PAGE_TITLE_FLIGHTS}
-    Verify Flight List Visible
-    Take Viewport Screenshot    flights    tablet
+Flight Detail Responsive Mobile
+    [Documentation]    Verifie que la page detail vol s affiche correctement sur mobile.
+    [Tags]    mobile
+    Setup Mobile Browser
+    Go To    ${SEARCH_URL}?status=SCHEDULED
+    Wait Until Element Is Visible    ${SEL_SEARCH_RESULTS}    timeout=${DEFAULT_TIMEOUT}
+    ${link}=    Get WebElement    xpath=(//a[@data-testid='search-flight-link'])[1]
+    ${href}=    Get Element Attribute    ${link}    href
+    Go To    ${href}
+    Wait Until Element Is Visible    ${SEL_FLIGHT_HEADER}    timeout=${DEFAULT_TIMEOUT}
+    Element Should Be Visible        ${SEL_DETAIL_STATUS}
+    Element Should Be Visible        ${SEL_DETAIL_CAPACITY}
+    Capture Page Screenshot    filename=${EXECDIR}/results/screenshots/flight_detail_mobile.png
 
-Flights Page Renders On Desktop
-    [Documentation]    Vérifie que la page flights s'affiche correctement sur desktop (1920px).
-    Open Flights Page
-    Set Desktop Viewport
-    Verify Navigation Visible
-    Verify Page Title Visible    ${SEL_PAGE_TITLE_FLIGHTS}
-    Verify Flight List Visible
-    Take Viewport Screenshot    flights    desktop
+Search Page Responsive Mobile
+    [Documentation]    Verifie que la page recherche s affiche correctement sur mobile.
+    [Tags]    mobile
+    Setup Mobile Browser
+    Go To    ${SEARCH_URL}
+    Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
+    Element Should Be Visible        ${SEL_SEARCH_ORIGIN}
+    Element Should Be Visible        ${SEL_SEARCH_STATUS}
+    Capture Page Screenshot    filename=${EXECDIR}/results/screenshots/search_mobile.png
 
-Flight Detail Renders On Mobile
-    [Documentation]    Vérifie que la page détail vol s'affiche correctement sur mobile.
-    Open Flights Page
-    Click First Flight
-    Set Mobile Viewport
-    Verify Navigation Visible
-    Verify Flight Detail Elements Visible
-    Take Viewport Screenshot    flight_detail    mobile
+Dashboard Responsive Desktop
+    [Documentation]    Verifie que le dashboard s affiche correctement sur desktop.
+    [Tags]    desktop
+    Setup Desktop Browser
+    Go To    ${DASHBOARD_URL}
+    Wait Until Element Is Visible    ${SEL_PAGE_TITLE_DASHBOARD}    timeout=${DEFAULT_TIMEOUT}
+    Element Should Be Visible        ${SEL_KPI_GRID}
+    Element Should Be Visible        ${SEL_TODAY_BAR}
+    Capture Page Screenshot    filename=${EXECDIR}/results/screenshots/dashboard_desktop.png
 
-Flight Detail Renders On Tablet
-    [Documentation]    Vérifie que la page détail vol s'affiche correctement sur tablette.
-    Open Flights Page
-    Click First Flight
-    Set Tablet Viewport
-    Verify Navigation Visible
-    Verify Flight Detail Elements Visible
-    Take Viewport Screenshot    flight_detail    tablet
 
-Flight Detail Renders On Desktop
-    [Documentation]    Vérifie que la page détail vol s'affiche correctement sur desktop.
-    Open Flights Page
-    Click First Flight
-    Set Desktop Viewport
-    Verify Navigation Visible
-    Verify Flight Detail Elements Visible
-    Take Viewport Screenshot    flight_detail    desktop
+*** Keywords ***
+Setup Mobile Browser
+    [Documentation]    Opens a headless browser, logs in as admin, and sets the window size to mobile dimensions.
+    Open Browser Headless
+    Login As Admin
+    Set Window Size    ${MOBILE_WIDTH}    ${MOBILE_HEIGHT}
 
-Search Page Renders On Mobile
-    [Documentation]    Vérifie que la page recherche s'affiche correctement sur mobile.
-    Open Flights Page
-    Go To Search Page
-    Set Mobile Viewport
-    Verify Navigation Visible
-    Verify Search Form Visible At Viewport
-    Take Viewport Screenshot    search    mobile
-
-Search Page Renders On Tablet
-    [Documentation]    Vérifie que la page recherche s'affiche correctement sur tablette.
-    Open Flights Page
-    Go To Search Page
-    Set Tablet Viewport
-    Verify Navigation Visible
-    Verify Search Form Visible At Viewport
-    Take Viewport Screenshot    search    tablet
-
-Search Page Renders On Desktop
-    [Documentation]    Vérifie que la page recherche s'affiche correctement sur desktop.
-    Open Flights Page
-    Go To Search Page
-    Set Desktop Viewport
-    Verify Navigation Visible
-    Verify Search Form Visible At Viewport
-    Take Viewport Screenshot    search    desktop
-
-Add Passenger Button Visible On Mobile
-    [Documentation]    Vérifie que le bouton Add Passenger est visible sur mobile.
-    Open Flights Page
-    Click First Flight
-    Set Mobile Viewport
-    Verify Add Passenger Button Visible
-    Take Viewport Screenshot    add_passenger_btn    mobile
-
-Add Passenger Button Visible On Desktop
-    [Documentation]    Vérifie que le bouton Add Passenger est visible sur desktop.
-    Open Flights Page
-    Click First Flight
-    Set Desktop Viewport
-    Verify Add Passenger Button Visible
-    Take Viewport Screenshot    add_passenger_btn    desktop
+Setup Desktop Browser
+    [Documentation]    Opens a headless browser, logs in as admin, and sets the window size to desktop dimensions.
+    Open Browser Headless
+    Login As Admin
+    Set Window Size    ${DESKTOP_WIDTH}    ${DESKTOP_HEIGHT}

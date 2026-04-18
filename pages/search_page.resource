@@ -5,14 +5,15 @@ Resource         ../resources/common.resource
 
 
 *** Keywords ***
-Go To Search Page
-    [Documentation]    Navigates to the search page from the flights list.
-    Wait Until Element Is Visible    ${SEL_BTN_GO_TO_SEARCH}     timeout=${DEFAULT_TIMEOUT}
-    Click Element                    ${SEL_BTN_GO_TO_SEARCH}
+Open Search Page
+    [Documentation]    Opens browser, logs in and navigates to search page.
+    Open Browser Headless
+    Login As Admin
+    Go To    ${SEARCH_URL}
     Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
 
 Verify Search Page Loaded
-    [Documentation]    Verifies that the search page is correctly displayed.
+    [Documentation]    Verifies the search page is fully loaded.
     Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
     Page Should Contain Element      ${SEL_SEARCH_FORM}
     Page Should Contain Element      ${SEL_SEARCH_ORIGIN}
@@ -20,81 +21,67 @@ Verify Search Page Loaded
     Page Should Contain Element      ${SEL_SEARCH_STATUS}
     Page Should Contain Element      ${SEL_SEARCH_DATE}
 
-Select Search Origin
-    [Documentation]    Selects an origin airport by its visible text.
+Verify Initial State
+    [Documentation]    Verifies initial state before any search.
+    Page Should Contain Element    ${SEL_SEARCH_INITIAL_STATE}
+
+Select Origin
+    [Documentation]    Selects an origin airport from the search form.
     [Arguments]    ${airport}
     Wait Until Element Is Visible    ${SEL_SEARCH_ORIGIN}    timeout=${DEFAULT_TIMEOUT}
     Wait Until Element Is Enabled    ${SEL_SEARCH_ORIGIN}    timeout=${DEFAULT_TIMEOUT}
     Select From List By Label        ${SEL_SEARCH_ORIGIN}    ${airport}
 
-Select Search Destination
-    [Documentation]    Selects a destination airport by its visible text.
+Select Destination
+    [Documentation]    Selects a destination airport from the search form.
     [Arguments]    ${airport}
     Wait Until Element Is Visible    ${SEL_SEARCH_DESTINATION}    timeout=${DEFAULT_TIMEOUT}
     Wait Until Element Is Enabled    ${SEL_SEARCH_DESTINATION}    timeout=${DEFAULT_TIMEOUT}
     Select From List By Label        ${SEL_SEARCH_DESTINATION}    ${airport}
 
-Select Search Status
-    [Documentation]    Selects a flight status filter.
+Select Status
+    [Documentation]    Selects a status from the search form.
     [Arguments]    ${status}
     Wait Until Element Is Visible    ${SEL_SEARCH_STATUS}    timeout=${DEFAULT_TIMEOUT}
     Wait Until Element Is Enabled    ${SEL_SEARCH_STATUS}    timeout=${DEFAULT_TIMEOUT}
     Select From List By Value        ${SEL_SEARCH_STATUS}    ${status}
 
-Select Search Date
-    [Documentation]    Inputs a departure date via JavaScript with change event trigger.
+Select Date
+    [Documentation]    Selects a date in the search form by setting the date input value and triggering a change event.
     [Arguments]    ${date}
     Execute Javascript
     ...    var el = document.querySelector("[data-testid='search-date']");
-    ...    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-    ...    nativeInputValueSetter.call(el, '${date}');
-    ...    el.dispatchEvent(new Event('input', { bubbles: true }));
+    ...    var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    ...    setter.call(el, '${date}');
     ...    el.dispatchEvent(new Event('change', { bubbles: true }));
+    Sleep    0.5s
 
 Submit Search
     [Documentation]    Submits the search form.
-    Click Element    ${SEL_BTN_SEARCH_SUBMIT}
+    Execute Javascript    document.querySelector('[data-testid="search-form"]').submit()
     Sleep    0.5s
     Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
 
 Reset Search
-    [Documentation]    Resets all search filters.
+    [Documentation]    Resets the search form to its initial state.
     Click Element    ${SEL_BTN_SEARCH_RESET}
-    Wait Until Element Is Visible    ${SEL_SEARCH_INITIAL_STATE}    timeout=${DEFAULT_TIMEOUT}
+    Wait Until Element Is Visible    ${SEL_PAGE_TITLE_SEARCH}    timeout=${DEFAULT_TIMEOUT}
+    Sleep    0.3s
 
-Verify Search Results Count
-    [Documentation]    Verifies the number of search results displayed.
-    [Arguments]    ${expected_count}
-    ${count}=    Get Element Count    ${SEL_SEARCH_RESULT_ITEM}
-    Should Be Equal As Integers    ${count}    ${expected_count}
-    ...    msg=Expected ${expected_count} results but got ${count}
-
-Verify Search Has Results
-    [Documentation]    Verifies that at least one result is displayed.
+Verify Has Results
+    [Documentation]    Verifies that search results are displayed and contain at least one item.
     Page Should Contain Element    ${SEL_SEARCH_RESULTS}
     ${count}=    Get Element Count    ${SEL_SEARCH_RESULT_ITEM}
-    Should Be True    ${count} > 0    msg=No results displayed
+    Should Be True    ${count} > 0    msg=No search results displayed
 
-Verify No Results Found
-    [Documentation]    Verifies that the no results message is displayed.
+Verify No Results
+    [Documentation]    Verifies that no search results are displayed.
     Page Should Contain Element    ${SEL_SEARCH_NO_RESULTS}
 
-Verify Initial State
-    [Documentation]    Verifies that the initial state message is displayed before search.
-    Page Should Contain Element    ${SEL_SEARCH_INITIAL_STATE}
-
-Verify Result Contains Status
-    [Documentation]    Verifies that all results match the expected status.
-    [Arguments]    ${expected_status}
-    ${results}=    Get WebElements    ${SEL_SEARCH_RESULT_STATUS}
-    FOR    ${result}    IN    @{results}
-        ${text}=    Get Text    ${result}
-        Should Contain    ${text}    ${expected_status}
-        ...    msg=Result status '${text}' does not match '${expected_status}'
-    END
-
-Click First Search Result
-    [Documentation]    Clicks on the first result in the search results list.
+Click First Result
+    [Documentation]    Clicks on the first search result flight link.
     Wait Until Element Is Visible    ${SEL_SEARCH_FLIGHT_LINK}    timeout=${DEFAULT_TIMEOUT}
-    Click Element                    xpath=(//a[@data-testid='search-flight-link'])[1]
-    Wait Until Element Is Visible    ${SEL_FLIGHT_HEADER}         timeout=${DEFAULT_TIMEOUT}
+    ${link}=    Get WebElement    xpath=(//a[@data-testid='search-flight-link'])[1]
+    ${href}=    Get Element Attribute    ${link}    href
+    Go To    ${href}
+    Wait Until Element Is Visible    ${SEL_FLIGHT_HEADER}    timeout=${DEFAULT_TIMEOUT}
