@@ -81,6 +81,10 @@ jobs:
     - name: Clone Django project
       run: git clone https://github.com/Lekkioui/airline-django.git ../airline-django
 
+    - name: Fix Directory Path for Django Script
+      # Cette commande crée un lien pour que ../airline-automation pointe vers le dossier actuel
+      run: ln -s $(pwd) ../airline-automation
+
     - name: Setup Django & dependencies
       run: |
         cd ../airline-django
