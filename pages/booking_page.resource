@@ -171,12 +171,25 @@ Generate Unique Username
     ${username}=     Set Variable    user_${timestamp}
     RETURN    ${username}
 
+# Generate Test Passenger Data
+#     [Documentation]    Generates unique passenger data for each test run.
+#     ${uuid}=         Evaluate    str(__import__('uuid').uuid4()).replace('-','')[:6].upper()
+#     ${letters}=      Evaluate    __import__('random').choice('ABCDEFGHJKLMNPQRSTUVWXYZ') +\
+#     ...              __import__('random').choice('ABCDEFGHJKLMNPQRSTUVWXYZ')
+#     ${digits}=       Evaluate    str(__import__('random').randint(100000, 999999))
+#     ${passport}=     Set Variable    ${letters}${digits}
+#     ${email}=        Set Variable    test_${uuid}@test.com
+#     ${first}=        Set Variable    Test${uuid}
+#     ${last}=         Set Variable    User${uuid}
+#     RETURN    ${first}    ${last}    ${email}    ${passport}
+
 Generate Test Passenger Data
     [Documentation]    Generates unique passenger data for each test run.
-    ${uuid}=         Evaluate    str(__import__('uuid').uuid4()).replace('-','')[:6].upper()
-    ${letters}=      Evaluate    __import__('random').choice('ABCDEFGHJKLMNPQRSTUVWXYZ') +\
-    ...              __import__('random').choice('ABCDEFGHJKLMNPQRSTUVWXYZ')
-    ${digits}=       Evaluate    str(__import__('random').randint(100000, 999999))
+    ${uuid}=         Evaluate    str(uuid.uuid4()).replace('-','')[:6].upper()    modules=uuid
+    ${letters}=      Evaluate
+    ...    random.choice('ABCDEFGHJKLMNPQRSTUVWXYZ') + random.choice('ABCDEFGHJKLMNPQRSTUVWXYZ')
+    ...    modules=random
+    ${digits}=       Evaluate    str(random.randint(100000, 999999))    modules=random
     ${passport}=     Set Variable    ${letters}${digits}
     ${email}=        Set Variable    test_${uuid}@test.com
     ${first}=        Set Variable    Test${uuid}
