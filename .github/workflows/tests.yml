@@ -36,14 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     
-    # Service PostgreSQL pour GitHub Actions
     services:
       postgres:
         image: postgres:14
         env:
           POSTGRES_DB: airline_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          # On aligne sur ton settings.py
+          POSTGRES_USER: airline_user
+          POSTGRES_PASSWORD: airline_pass
         ports:
           - 5432:5432
         options: >-
@@ -82,12 +82,6 @@ jobs:
       run: git clone https://github.com/Lekkioui/airline-django.git ../airline-django
 
     - name: Setup Django & dependencies
-      env:
-        DB_NAME: airline_db
-        DB_USER: postgres
-        DB_PASSWORD: password
-        DB_HOST: localhost
-        DB_PORT: 5432
       run: |
         cd ../airline-django
         pip install django psycopg2-binary
@@ -95,12 +89,6 @@ jobs:
         python manage.py setup_test_data
 
     - name: Run Django server
-      env:
-        DB_NAME: airline_db
-        DB_USER: airline_user
-        DB_PASSWORD: 123456
-        DB_HOST: localhost
-        DB_PORT: 5432
       run: |
         cd ../airline-django
         nohup python manage.py runserver 0.0.0.0:8000 > django.log 2>&1 &
