@@ -98,7 +98,7 @@ jobs:
       env:
         DB_NAME: airline_db
         DB_USER: airline_user
-        DB_PASSWORD: airline_pass
+        DB_PASSWORD: 123456
         DB_HOST: localhost
         DB_PORT: 5432
       run: |
