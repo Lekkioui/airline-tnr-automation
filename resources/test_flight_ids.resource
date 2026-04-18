@@ -1,4 +1,9 @@
+*** Settings ***
+Documentation    Test data for flight IDs and passenger information
+
+
 *** Variables ***
+${BASE_URL}                      http://localhost:8080
 ${TEST_FLIGHT_SCHEDULED_ID}      1225310
 ${TEST_FLIGHT_BOARDING_ID}       1225311
 ${TEST_FLIGHT_DEPARTED_ID}       1225312
