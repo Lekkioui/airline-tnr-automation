@@ -97,8 +97,8 @@ jobs:
     - name: Run Django server
       env:
         DB_NAME: airline_db
-        DB_USER: postgres
-        DB_PASSWORD: password
+        DB_USER: airline_user
+        DB_PASSWORD: airline_pass
         DB_HOST: localhost
         DB_PORT: 5432
       run: |
